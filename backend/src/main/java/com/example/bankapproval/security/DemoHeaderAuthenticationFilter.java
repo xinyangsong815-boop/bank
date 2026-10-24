@@ -46,8 +46,9 @@ public class DemoHeaderAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             UserRole role;
-            try { role = UserRole.parse(roleHeader); }
-            catch (BizException ex) {
+            try {
+                role = UserRole.parse(roleHeader);
+            } catch (BizException ex) {
                 // Filter 位于 MVC 之外，异常不会到达 @RestControllerAdvice，必须自行输出 JSON。
                 writeError(response, 400, "INVALID_ROLE", "未知演示角色");
                 return;

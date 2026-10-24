@@ -11,10 +11,17 @@ import java.time.LocalDate;
 
 @Data
 public class TransactionQueryRequest {
-    @Size(max = 100) private String keyword;
+    @Size(max = 100)
+    private String keyword;
     private TransactionStatus status;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) private LocalDate startDate;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) private LocalDate endDate;
-    @Min(1) @Max(1000000) private int page = 1;
-    @Min(1) @Max(100) private int size = 10;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate startDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate endDate;
+    @Min(1)
+    @Max(1000000)
+    private int page = 1;
+    @Min(1)
+    @Max(100)
+    private int size = 10;
 }

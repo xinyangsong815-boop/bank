@@ -1,6 +1,8 @@
 package com.example.bankapproval.domain.approval;
 
-/** 责任链基类：每个处理器只校验一种审批规则。 */
+/**
+ * 责任链基类：每个处理器只校验一种审批规则。
+ */
 public abstract class ApprovalRuleHandler {
     private ApprovalRuleHandler next;
 

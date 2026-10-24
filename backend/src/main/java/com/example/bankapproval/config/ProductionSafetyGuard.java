@@ -5,7 +5,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-/** 生产环境安全闸：防止误把可伪造身份的教学认证或明文模式带入生产。 */
+/**
+ * 生产环境安全闸：防止误把可伪造身份的教学认证或明文模式带入生产。
+ */
 @Component
 @Profile("prod")
 public class ProductionSafetyGuard {

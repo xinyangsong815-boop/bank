@@ -36,14 +36,16 @@ public class TransactionStateMachine {
     }
 
     private static class DraftState extends BaseState {
-        @Override public StateTransition transit(TransactionEvent event) {
+        @Override
+        public StateTransition transit(TransactionEvent event) {
             if (event == TransactionEvent.SUBMIT) return new StateTransition(TransactionStatus.PENDING_L1, 1);
             throw illegal(event);
         }
     }
 
     private static class RejectedState extends BaseState {
-        @Override public StateTransition transit(TransactionEvent event) {
+        @Override
+        public StateTransition transit(TransactionEvent event) {
             if (event == TransactionEvent.RESUBMIT) return new StateTransition(TransactionStatus.PENDING_L1, 1);
             throw illegal(event);
         }
@@ -52,11 +54,14 @@ public class TransactionStateMachine {
     private static class PendingState extends BaseState {
         private final int level;
         private final TransactionStatus approvedNext;
+
         PendingState(int level, TransactionStatus approvedNext) {
             this.level = level;
             this.approvedNext = approvedNext;
         }
-        @Override public StateTransition transit(TransactionEvent event) {
+
+        @Override
+        public StateTransition transit(TransactionEvent event) {
             if (event == TransactionEvent.APPROVE) {
                 return new StateTransition(approvedNext, approvedNext == TransactionStatus.APPROVED ? 0 : level + 1);
             }
@@ -66,6 +71,9 @@ public class TransactionStateMachine {
     }
 
     private static class TerminalState extends BaseState {
-        @Override public StateTransition transit(TransactionEvent event) { throw illegal(event); }
+        @Override
+        public StateTransition transit(TransactionEvent event) {
+            throw illegal(event);
+        }
     }
 }

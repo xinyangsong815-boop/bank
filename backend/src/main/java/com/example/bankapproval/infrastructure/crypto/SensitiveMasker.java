@@ -1,7 +1,8 @@
 package com.example.bankapproval.infrastructure.crypto;
 
 public final class SensitiveMasker {
-    private SensitiveMasker() { }
+    private SensitiveMasker() {
+    }
 
     public static String mobile(String value) {
         if (value == null || value.length() < 7) return "***";
