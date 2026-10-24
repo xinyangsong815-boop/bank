@@ -1,0 +1,31 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: bank-approval-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root-demo-only
+      MYSQL_DATABASE: bank_approval
+      MYSQL_USER: bank_app
+      MYSQL_PASSWORD: bank_app_ChangeMe
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+    ports:
+      - "3306:3306"
+    volumes:
+      - bank-approval-mysql-data:/var/lib/mysql
+      - ./database/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/02-data.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ubank_app", "-pbank_app_ChangeMe"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  bank-approval-mysql-data:
+

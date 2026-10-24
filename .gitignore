@@ -1,0 +1,21 @@
+# Backend
+backend/target/
+*.log
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Local secrets and overrides
+.env
+.env.local
+application-local.yml
+docker-compose.override.yml
+

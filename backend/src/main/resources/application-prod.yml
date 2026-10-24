@@ -1,0 +1,16 @@
+spring:
+  sql:
+    init:
+      mode: never
+
+bank:
+  security:
+    # 即使设为 false，本示例也未内置生产身份提供方；部署前必须接入 OAuth2/OIDC/IAM。
+    demo-auth-enabled: false
+  crypto:
+    enabled: true
+    base64-key: ${BANK_CRYPTO_KEY}
+
+logging:
+  level:
+    com.example.bankapproval.infrastructure.persistence.mapper: info

@@ -1,0 +1,21 @@
+/* 视图类名按功能分组；集中加载兼容 Vue 2 / Vue CLI 5 的 CSS 构建链。 */
+.teaching-card { margin-top:0; }
+.pattern-item { padding:12px 0;border-bottom:1px solid #edf1f6; }
+.pattern-item b,.pattern-item span { display:block; }
+.pattern-item b { font-size:14px;color:#183554; }
+.pattern-item span { color:#778397;font-size:12px;line-height:1.6;margin-top:4px; }
+.detail-item .amount { font-size:20px !important;font-weight:700;color:#10243e; }
+.detail-grid .purpose { grid-column:1/-1; }
+.info-card,.lock-card { margin-top:0;min-height:310px; }
+.version-orbit { width:94px;height:94px;border-radius:50%;margin:4px auto 18px;display:grid;place-items:center;border:8px solid #dff4f7;box-shadow:0 0 0 1px #0ea5b7;color:#0b7280;font-size:24px;font-weight:750; }
+.lock-card p { color:#6b778c;font-size:12px;line-height:1.75; }
+.lock-card code { color:#0b7280;background:#eaf7f8;padding:2px 4px;border-radius:4px; }
+.transaction-form { max-width:940px;margin:0 auto; }
+.transaction-form .el-divider { margin:30px 0; }
+.transaction-form .field-tip { margin:4px 0 12px 118px;width:auto; }
+.form-actions { display:flex;justify-content:flex-end;gap:8px;margin-top:28px;padding-top:22px;border-top:1px solid #e6ebf2; }
+.list-summary { margin-bottom:14px;color:#59667a;font-size:13px; }
+.el-table .link { color:#2563eb;cursor:pointer; }
+.pagination { margin-top:20px;text-align:right; }
+@media (max-width:1199px) { .lock-card,.teaching-card { margin-top:18px; } }
+@media (max-width:720px) { .transaction-form .field-tip { margin-left:0; } }

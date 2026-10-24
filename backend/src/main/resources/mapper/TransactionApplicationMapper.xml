@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bankapproval.infrastructure.persistence.mapper.TransactionApplicationMapper">
+    <resultMap id="TransactionMap" type="com.example.bankapproval.domain.model.TransactionApplication">
+        <id property="id" column="id"/>
+        <result property="applicationNo" column="application_no"/>
+        <result property="applicantId" column="applicant_id"/>
+        <result property="applicantName" column="applicant_name"/>
+        <result property="departmentId" column="department_id"/>
+        <result property="mobileCiphertext" column="mobile_ciphertext"/>
+        <result property="idCardCiphertext" column="id_card_ciphertext"/>
+        <result property="accountCiphertext" column="account_ciphertext"/>
+        <result property="counterpartyAccountCiphertext" column="counterparty_account_ciphertext"/>
+        <result property="amount" column="amount"/>
+        <result property="currency" column="currency"/>
+        <result property="purpose" column="purpose"/>
+        <result property="riskScore" column="risk_score"/>
+        <result property="riskLevel" column="risk_level"/>
+        <result property="status" column="status" javaType="com.example.bankapproval.domain.model.TransactionStatus"/>
+        <result property="currentLevel" column="current_level"/>
+        <result property="rejectionReason" column="rejection_reason"/>
+        <result property="version" column="version"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="columns">
+        id, application_no, applicant_id, applicant_name, department_id,
+        mobile_ciphertext, id_card_ciphertext, account_ciphertext, counterparty_account_ciphertext,
+        amount, currency, purpose, risk_score, risk_level, status, current_level,
+        rejection_reason, version, created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.example.bankapproval.domain.model.TransactionApplication"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO transaction_application
+        (application_no, applicant_id, applicant_name, department_id, mobile_ciphertext,
+         id_card_ciphertext, account_ciphertext, counterparty_account_ciphertext, amount,
+         currency, purpose, risk_score, risk_level, status, current_level,
+         rejection_reason, version, created_at, updated_at)
+        VALUES
+        (#{applicationNo}, #{applicantId}, #{applicantName}, #{departmentId}, #{mobileCiphertext},
+         #{idCardCiphertext}, #{accountCiphertext}, #{counterpartyAccountCiphertext}, #{amount},
+         #{currency}, #{purpose}, #{riskScore}, #{riskLevel}, #{status}, #{currentLevel},
+         #{rejectionReason}, #{version}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <select id="findById" resultMap="TransactionMap">
+        SELECT <include refid="columns"/> FROM transaction_application WHERE id = #{id}
+    </select>
+
+    <sql id="queryWhere">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (application_no LIKE CONCAT('%', #{keyword}, '%') OR purpose LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null">AND status = #{status}</if>
+            <if test="applicantId != null">AND applicant_id = #{applicantId}</if>
+            <if test="departmentId != null">AND department_id = #{departmentId}</if>
+            <if test="currentLevel != null">AND current_level = #{currentLevel}</if>
+            <if test="startAt != null">AND created_at <![CDATA[ >= ]]> #{startAt}</if>
+            <if test="endExclusive != null">AND created_at <![CDATA[ < ]]> #{endExclusive}</if>
+        </where>
+    </sql>
+
+    <select id="findPage" resultMap="TransactionMap">
+        SELECT <include refid="columns"/> FROM transaction_application
+        <include refid="queryWhere"/>
+        ORDER BY created_at DESC, id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(1) FROM transaction_application <include refid="queryWhere"/>
+    </select>
+
+    <!-- 条件更新同时校验旧状态和 version，解决重复点击、并发审批与 ABA 风险。 -->
+    <update id="updateStatus">
+        UPDATE transaction_application
+        SET status = #{nextStatus}, current_level = #{nextLevel}, rejection_reason = #{rejectionReason},
+            risk_score = #{riskScore}, risk_level = #{riskLevel}, version = version + 1, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id} AND version = #{expectedVersion} AND status = #{expectedStatus}
+    </update>
+
+    <update id="updateForResubmit">
+        UPDATE transaction_application
+        SET mobile_ciphertext = #{tx.mobileCiphertext}, id_card_ciphertext = #{tx.idCardCiphertext},
+            account_ciphertext = #{tx.accountCiphertext},
+            counterparty_account_ciphertext = #{tx.counterpartyAccountCiphertext},
+            amount = #{tx.amount}, currency = #{tx.currency}, purpose = #{tx.purpose},
+            risk_score = #{tx.riskScore}, risk_level = #{tx.riskLevel},
+            status = #{tx.status}, current_level = #{tx.currentLevel}, rejection_reason = NULL,
+            version = version + 1, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{tx.id} AND version = #{expectedVersion} AND status = #{expectedStatus}
+    </update>
+</mapper>
