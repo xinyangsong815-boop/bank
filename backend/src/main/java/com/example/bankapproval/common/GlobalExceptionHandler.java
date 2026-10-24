@@ -7,7 +7,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.BindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+
 import javax.validation.ConstraintViolationException;
+
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,15 +17,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** @RestControllerAdvice 将异常稳定地转换成统一 JSON，前端无需猜测错误格式。 */
+/**
+ * @RestControllerAdvice 将异常稳定地转换成统一 JSON，前端无需猜测错误格式。
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(BizException.class)
     public ResponseEntity<ApiResponse<Void>> handleBiz(BizException ex) {
         HttpStatus status = "NOT_FOUND".equals(ex.getCode()) ? HttpStatus.NOT_FOUND :
                 ("CONCURRENT_MODIFICATION".equals(ex.getCode()) ? HttpStatus.CONFLICT :
-                ("DATA_SCOPE_DENIED".equals(ex.getCode()) || "SEPARATION_OF_DUTIES".equals(ex.getCode())
-                        ? HttpStatus.FORBIDDEN : HttpStatus.BAD_REQUEST));
+                        ("DATA_SCOPE_DENIED".equals(ex.getCode()) || "SEPARATION_OF_DUTIES".equals(ex.getCode())
+                                ? HttpStatus.FORBIDDEN : HttpStatus.BAD_REQUEST));
         return ResponseEntity.status(status).body(new ApiResponse<Void>(false, ex.getCode(), ex.getMessage(), null));
     }
 
@@ -59,6 +63,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ApiResponse<Void>(false, "FORBIDDEN", "无权执行此操作", null));
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleUnknown(Exception ex) {

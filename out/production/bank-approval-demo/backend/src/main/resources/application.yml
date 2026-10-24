@@ -1,0 +1,43 @@
+server:
+  port: ${SERVER_PORT:8088}
+
+spring:
+  application:
+    name: bank-approval-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/bank_approval?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:bank_app}
+    password: ${DB_PASSWORD:bank_app_ChangeMe}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: Asia/Shanghai
+  sql:
+    init:
+      mode: never
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    default-enum-type-handler: org.apache.ibatis.type.EnumTypeHandler
+
+bank:
+  crypto:
+    enabled: true
+    # 仅教学默认值：ASCII "0123456789abcdef" 重复两次的 Base64。生产必须通过 BANK_CRYPTO_KEY 注入并接入 KMS/HSM。
+    base64-key: ${BANK_CRYPTO_KEY:MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=}
+  security:
+    # 严重警告：请求头认证可被任意伪造，只能用于本地教学演示，绝对禁止生产使用。
+    demo-auth-enabled: ${DEMO_AUTH_ENABLED:true}
+
+logging:
+  level:
+    # SQL DEBUG 日志会打印参数（含密文和自由文本），教学环境也默认关闭。
+    com.example.bankapproval.infrastructure.persistence.mapper: info

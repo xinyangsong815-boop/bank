@@ -4,7 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-/** 演示 @Profile：不同环境暴露一个只读的环境标识，不把环境判断散落在业务代码中。 */
+/**
+ * 演示 @Profile：不同环境暴露一个只读的环境标识，不把环境判断散落在业务代码中。
+ */
 @Configuration
 public class ProfileTeachingConfig {
     @Bean
@@ -28,11 +30,18 @@ public class ProfileTeachingConfig {
     public static class RuntimeEnvironment {
         private final String name;
         private final boolean production;
+
         public RuntimeEnvironment(String name, boolean production) {
             this.name = name;
             this.production = production;
         }
-        public String getName() { return name; }
-        public boolean isProduction() { return production; }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean isProduction() {
+            return production;
+        }
     }
 }

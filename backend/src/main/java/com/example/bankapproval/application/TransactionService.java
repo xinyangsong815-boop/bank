@@ -218,8 +218,8 @@ public class TransactionService {
     }
 
     private void applySensitiveAndBusinessFields(TransactionApplication tx, String mobile, String idCard,
-                                                  String account, String counterpartyAccount,
-                                                  java.math.BigDecimal amount, String currency, String purpose) {
+                                                 String account, String counterpartyAccount,
+                                                 java.math.BigDecimal amount, String currency, String purpose) {
         tx.setMobileCiphertext(crypto.encrypt(mobile));
         tx.setIdCardCiphertext(crypto.encrypt(idCard.toUpperCase(Locale.ROOT)));
         tx.setAccountCiphertext(crypto.encrypt(account));
@@ -261,7 +261,8 @@ public class TransactionService {
 
     private void applyDataScope(TransactionQuery query, DemoPrincipal user) {
         if (user.getRole() == UserRole.APPLICANT) query.setApplicantId(user.getUserId());
-        else if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.AUDITOR) query.setDepartmentId(user.getDepartmentId());
+        else if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.AUDITOR)
+            query.setDepartmentId(user.getDepartmentId());
     }
 
     private void audit(Long transactionId, DemoPrincipal user, String operation, String detail, String ip) {

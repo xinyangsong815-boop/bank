@@ -14,13 +14,18 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-/** @RestController 直接返回 JSON；@Validated 让路径和查询参数也参与校验。 */
+/**
+ * @RestController 直接返回 JSON；@Validated 让路径和查询参数也参与校验。
+ */
 @RestController
 @RequestMapping("/api/transactions")
 @Validated
 public class TransactionController {
     private final TransactionService service;
-    public TransactionController(TransactionService service) { this.service = service; }
+
+    public TransactionController(TransactionService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ApiResponse<TransactionResponse> create(@Valid @RequestBody CreateTransactionRequest body, HttpServletRequest request) {

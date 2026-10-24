@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bankapproval.infrastructure.persistence.mapper.ApprovalRecordMapper">
+    <insert id="insert" parameterType="com.example.bankapproval.domain.model.ApprovalRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO approval_record
+        (transaction_id, level, approver_id, approver_name, action, status_before, status_after, comment, created_at)
+        VALUES (#{transactionId}, #{level}, #{approverId}, #{approverName}, #{action},
+                #{statusBefore}, #{statusAfter}, #{comment}, #{createdAt})
+    </insert>
+    <select id="findByTransactionId" resultType="com.example.bankapproval.domain.model.ApprovalRecord">
+        SELECT id, transaction_id AS transactionId, level, approver_id AS approverId,
+               approver_name AS approverName, action, status_before AS statusBefore,
+               status_after AS statusAfter, comment, created_at AS createdAt
+        FROM approval_record WHERE transaction_id = #{transactionId} ORDER BY created_at, id
+    </select>
+</mapper>
